@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Transações</h1>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:center">Produto</th>
+    <th style="text-align:center">Usuário</th>
+    <th style="text-align:center">Empresa</th>
+    <th style="text-align:center">Tipo de Transação</th>
+    <th style="text-align:center">Quantidade</th>
+    <th style="text-align:center">Data</th>
+  </tr>
+  {% for transaction in transactions %}
+  <tr>
+    <td>{{ transaction.product.name }}</td>
+    <td>{{ transaction.user.username }}</td>
+    <td>{{ transaction.company.name }}</td>
+    <td>{{ transaction.transaction_type }}</td>
+    <td>{{ transaction.quantity }}</td>
+    <td>{{ transaction.created_at }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Produtos</h1>
+
+  <form>
+    <label for="name">Nome:</label>
+    <input type="text" name="name">
+  
+    <label for="quantity">Quantidade:</label>
+    <input type="number" name="quantity">
+  
+    <button type="submit">Filtrar</button>
+  </form>
+  
+  <a href="{% url 'add_product' %}" class="btn btn-primary mb-2">Novo Produto</a>
+  <table style="width:100%">
+    <thead>
+      <tr>
+        <th style="text-align:center">Nome</th>
+        <th style="text-align:center">Descrição</th>
+        <th style="text-align:center">Qtd</th>
+        <th style="text-align:center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>
+            <a href="{% url 'add_transaction' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">Nova Transação</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
