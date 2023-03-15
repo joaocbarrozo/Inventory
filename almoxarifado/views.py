@@ -29,18 +29,27 @@ def home_view(request):
 
 @login_required    
 def product_view(request):
-    name = request.GET.get('name')#
-    quantity = request.GET.get('quantity')#
+    name = request.GET.get('name')
+    quantity = request.GET.get('quantity')
     products = Product.objects.all()
     if name:
-        products = products.filter(name__icontains=name)#
+        products = products.filter(name__icontains=name)
     if quantity:
-        products = products.filter(quantity=quantity)#
+        products = products.filter(quantity=quantity)
     return render(request, 'product.html', {'products': products})
 
 @login_required    
 def transaction_log(request):
     transactions = Transaction.objects.all()
+     # Filter transactions by product name
+    product_name = request.GET.get('product_name')
+    if product_name:
+        transactions = transactions.filter(product__name__icontains=product_name)
+
+    # Filter transactions by transaction type
+    transaction_type = request.GET.get('transaction_type')
+    if transaction_type:
+        transactions = transactions.filter(transaction_type=transaction_type)
     return render(request, 'transaction_log.html', {'transactions': transactions})
 
 @login_required

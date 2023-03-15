@@ -37,15 +37,13 @@ class Transaction(models.Model):
         
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        print('transaction_type:', self.transaction_type)
-        print('quantity:', self.quantity)
-        print('product.quantity before:', self.product.quantity)
+
         if self.transaction_type == Transaction.SALE:
             self.product.quantity -= self.quantity
         elif self.transaction_type == Transaction.PURCHASE:
             self.product.quantity += self.quantity
         self.product.save()
-        print('product.quantity after:', self.product.quantity)
+       
 
 
 # Create your models here.
