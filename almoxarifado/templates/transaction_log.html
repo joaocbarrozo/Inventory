@@ -28,12 +28,12 @@
   </tr>
   {% for transaction in transactions %}
   <tr>
-    <td>{{ transaction.product.name }}</td>
-    <td>{{ transaction.user.username }}</td>
-    <td>{{ transaction.company.name }}</td>
-    <td>{{ transaction.transaction_type }}</td>
-    <td>{{ transaction.quantity }}</td>
-    <td>{{ transaction.created_at }}</td>
+    <td>{{ transaction.produto.nome }}</td>
+    <td>{{ transaction.usuario.username }}</td>
+    <td>{{ transaction.fornecedor.nome }}</td>
+    <td>{{ transaction.transacao_tipo }}</td>
+    <td>{{ transaction.quantidade }}</td>
+    <td>{{ transaction.criado_em }}</td>
   </tr>
   {% endfor %}
 </table>

@@ -8,10 +8,10 @@
   <br>
 
   <form>
-    <label for="name">Nome:</label>
+    <label for="nome">Nome:</label>
     <input type="text" name="name">
   
-    <label for="quantity">Quantidade:</label>
+    <label for="quantidade">Quantidade:</label>
     <input type="number" name="quantity">
   
     <button type="submit">Filtrar</button>
@@ -23,6 +23,7 @@
       <tr>
         <th style="text-align:center">Nome</th>
         <th style="text-align:center">Descrição</th>
+        <th style="text-align:center">Estoque Minimo</th>
         <th style="text-align:center">Qtd</th>
         <th style="text-align:center">Ações</th>
       </tr>
@@ -30,9 +31,10 @@
     <tbody>
       {% for product in products %}
         <tr>
-          <td>{{ product.name }}</td>
-          <td>{{ product.description }}</td>
-          <td>{{ product.quantity }}</td>
+          <td>{{ product.nome }}</td>
+          <td>{{ product.descricao }}</td>
+          <td>{{ product.estoque_minimo }}</td>
+          <td>{{ product.quantidade }}</td>
           <td>
             <a href="{% url 'add_transaction' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">Nova Transação</a>
           </td>

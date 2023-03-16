@@ -1,48 +1,49 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Product(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    quantity = models.PositiveIntegerField()
+class Produto(models.Model):
+    nome = models.CharField(max_length=255)
+    descricao = models.TextField()
+    quantidade = models.PositiveIntegerField()
+    estoque_minimo = models.PositiveIntegerField()
     def __str__(self):
-        return self.name
+        return self.nome
 
-class Company(models.Model):
-    name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
+class Fornecedor(models.Model):
+    nome = models.CharField(max_length=255)
+    fone = models.CharField(max_length=20)
     email = models.EmailField()
     def __str__(self):
-        return self.name
+        return self.nome
 
 
-class Transaction(models.Model):
-    SALE = 'Saida'
-    PURCHASE = 'Entrada'
+class Transacao(models.Model):
+    SAIDA = 'Saida'
+    ENTRADA = 'Entrada'
     
     TRANSACTION_TYPES = (
         ('Saida', 'Saida'),
         ('Entrada', 'Entrada'),
     )
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
-    quantity = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
+    transacao_tipo = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
+    quantidade = models.PositiveIntegerField()
+    criado_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.company.name
+        return self.fornecedor.nome
         
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-        if self.transaction_type == Transaction.SALE:
-            self.product.quantity -= self.quantity
-        elif self.transaction_type == Transaction.PURCHASE:
-            self.product.quantity += self.quantity
-        self.product.save()
+        if self.transacao_tipo == Transacao.SAIDA:
+            self.produto.quantidade -= self.quantidade
+        elif self.transacao_tipo == Transacao.ENTRADA:
+            self.produto.quantidade += self.quantidade
+        self.produto.save()
        
 
 

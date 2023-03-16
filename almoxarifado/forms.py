@@ -1,12 +1,12 @@
 from django import forms
-from .models import Product, Transaction
+from .models import Produto, Transacao
 
 class ProductForm(forms.ModelForm):
     class Meta:
-        model = Product
-        fields = ['name', 'description', 'quantity']
+        model = Produto
+        fields = ['nome', 'descricao', 'quantidade', 'estoque_minimo']
 
 class TransactionForm(forms.ModelForm):
     class Meta:
-        model = Transaction
-        fields = ['product', 'user', 'company', 'transaction_type', 'quantity']
+        model = Transacao
+        fields = ['produto', 'usuario', 'fornecedor', 'transacao_tipo', 'quantidade']

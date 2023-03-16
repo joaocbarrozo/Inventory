@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product, Transaction
+from .models import Produto, Transacao
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
@@ -23,7 +23,7 @@ def logout_view(request):
     
 @login_required    
 def home_view(request):
-    products = Product.objects.all()
+    products = Produto.objects.all()
     context = {'products': products}
     return render(request, 'home.html', context)
 
@@ -31,25 +31,25 @@ def home_view(request):
 def product_view(request):
     name = request.GET.get('name')
     quantity = request.GET.get('quantity')
-    products = Product.objects.all()
+    products = Produto.objects.all()
     if name:
-        products = products.filter(name__icontains=name)
+        products = products.filter(nome__icontains=name)
     if quantity:
-        products = products.filter(quantity=quantity)
+        products = products.filter(quantidade=quantity)
     return render(request, 'product.html', {'products': products})
 
 @login_required    
 def transaction_log(request):
-    transactions = Transaction.objects.all()
+    transactions = Transacao.objects.all()
      # Filter transactions by product name
     product_name = request.GET.get('product_name')
     if product_name:
-        transactions = transactions.filter(product__name__icontains=product_name)
+        transactions = transactions.filter(produto__nome__icontains=product_name)
 
     # Filter transactions by transaction type
     transaction_type = request.GET.get('transaction_type')
     if transaction_type:
-        transactions = transactions.filter(transaction_type=transaction_type)
+        transactions = transactions.filter(transacao_tipo=transaction_type)
     return render(request, 'transaction_log.html', {'transactions': transactions})
 
 @login_required
@@ -73,7 +73,7 @@ def add_transaction(request):
     else:
         product_id = request.GET.get('product_id')
         user_id = request.GET.get('user_id')
-        initial_data = {'product': product_id, 'user': user_id}
+        initial_data = {'produto': product_id, 'usuario': user_id}
         form = TransactionForm(initial=initial_data)
     return render(request, 'add_transaction.html', {'form': form})
     
