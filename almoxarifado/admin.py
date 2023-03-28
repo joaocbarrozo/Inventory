@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from almoxarifado.models import Produto, Fornecedor, Transacao
 
-
 @admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):
     pass
