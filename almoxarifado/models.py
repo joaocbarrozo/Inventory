@@ -45,6 +45,31 @@ class Transacao(models.Model):
             self.produto.quantidade += self.quantidade
         self.produto.save()
        
+class Pedido(models.Model):
+    STATUS = (
+        ('Aberto', 'aberto'),
+        ('Realizado', 'realizado'),
+        ('Cancelado', 'cancelado')
+    )
+    
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    quantidade = models.PositiveBigIntegerField()
+    criado_em = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20,choices=STATUS)
+    solicitante = models.ForeignKey(User, on_delete=models.CASCADE)
 
+class Compra(models.Model):
+    STATUS = (
+        ('Recebida', 'recebida'),
+        ('Não-Recebida', 'não-recebida'),
+        ('Cancelada', 'cancelada')
+    )    
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    quantidade = models.PositiveBigIntegerField()
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
+    criado_em = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20,choices=STATUS)
+    solicitante = models.ForeignKey(User, on_delete=models.CASCADE) 
 
 # Create your models here.
