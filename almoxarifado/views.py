@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Produto, Transacao
+from .models import Produto, Transacao, Pedido, ProdutoPedido
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm, TransactionForm
+from .forms import ProductForm, TransactionForm, PedidoForm, ProdutoPedidoForm
 
 def login_view(request):
     if request.method == 'POST':
@@ -77,5 +77,29 @@ def add_transaction(request):
         form = TransactionForm(initial=initial_data)
     return render(request, 'add_transaction.html', {'form': form})
     
+@login_required
+def lista_pedidos(request):
+    pedidos = Pedido.objects.filter(status='Realizado')
+    return render(request, 'lista_pedidos.html', {'pedidos': pedidos})
+
+@login_required
+def criar_pedido(request):
+    if request.method == 'POST':
+        pedido_form = PedidoForm(request.POST)
+        produto_pedido_form = ProdutoPedidoForm(request.POST)
+        if pedido_form.is_valid() and produto_pedido_form.is_valid():
+            pedido = pedido_form.save(commit=False)
+            pedido.status = 'Aberto'
+            pedido.solicitante = request.user
+            pedido.save()
+            produto_pedido = produto_pedido_form.save(commit=False)
+            produto_pedido.pedido = pedido
+            produto_pedido.save()
+            return redirect('lista_pedido')
+    else:
+        pedido_form = PedidoForm()
+        produto_pedido_form = ProdutoPedidoForm()
+    return render(request, 'criar_pedido.html', {'pedido_form': pedido_form, 'produto_pedido_form': produto_pedido_form})
+
 
 # Create your views here.

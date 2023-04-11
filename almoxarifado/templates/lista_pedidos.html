@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{%block content%}
+    {% for pedido in pedidos %}
+        <p>Pedido #{{ pedido.id }} - {{ pedido.status }}</p>
+    {% endfor %}
+
+    <a href="{% url 'criar_pedido' %}" class="btn btn-primary btn-sm">Criar Pedido</a>
+{%endblock%}

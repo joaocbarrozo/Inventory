@@ -52,11 +52,15 @@ class Pedido(models.Model):
         ('Cancelado', 'cancelado')
     )
     
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
-    quantidade = models.PositiveBigIntegerField()
     criado_em = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20,choices=STATUS)
     solicitante = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class ProdutoPedido(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    quantidade = models.PositiveBigIntegerField()
+
 
 class Compra(models.Model):
     STATUS = (
