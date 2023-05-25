@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from almoxarifado.models import Produto, Fornecedor, Transacao, ProdutoPedido, Pedido
+from almoxarifado.models import Produto, Fornecedor, Transacao, ProdutoPedido, Pedido, Categoria, Setor, LocalPrateleira
 
 @admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):
@@ -22,4 +22,15 @@ class ProdutoPedidoAdmin(admin.ModelAdmin):
 class PedidoAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(Categoria)
+class CategoriaAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Setor)
+class SetorAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(LocalPrateleira)
+class LocalPrateleiraAdmin(admin.ModelAdmin):
+    pass
 # Register your models here.

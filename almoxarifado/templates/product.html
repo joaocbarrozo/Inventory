@@ -1,47 +1,91 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 
 {% block content %}
   <h1>Produtos</h1>
-  <br>
+ <!-- Painel superior de controles -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-4 text-white p-3">
+        <!-- Botão para adicionar novo produto -->
+        <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#addProductModal">
+          Novo Produto
+        </button>
+      </div>
+      <div class="col-8 text-dark p-3">
+        <!-- Filtro -->
+        <form class="form-control">
+          <label for="nome">Nome:</label>
+          <input type="text" name="name">
+        
+          <label for="quantidade">Quantidade:</label>
+          <input type="number" name="quantity">
+        
+          <button class="btn btn-primary btn-sm mb-1 " type="submit">Filtrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-  <a href="{% url 'add_product' %}" class="btn btn-primary mb-2">Novo Produto</a>
-  <br>
-
-  <form>
-    <label for="nome">Nome:</label>
-    <input type="text" name="name">
+  <!-- Modal para adicionar um produto -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addProductModalLabel">Novo Produto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="form-control" method="post" action="{% url 'product' %}">
+            {% csrf_token %}
+            {{ form }}
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Salvar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   
-    <label for="quantidade">Quantidade:</label>
-    <input type="number" name="quantity">
+  <!-- Mensagem de sucesso ao adicionar um produto -->
+  {% if messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endif %}
   
-    <button type="submit">Filtrar</button>
-  </form>
-  <br>
-  
-  <table style="width:100%">
-    <thead>
-      <tr>
-        <th style="text-align:center">Nome</th>
-        <th style="text-align:center">Descrição</th>
-        <th style="text-align:center">Estoque Minimo</th>
-        <th style="text-align:center">Qtd</th>
-        <th style="text-align:center">Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in products %}
+  <!-- Tabela de dados dos produtos -->
+  <div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered ">
+      <thead class="table-primary">
         <tr>
-          <td>{{ product.nome }}</td>
-          <td>{{ product.descricao }}</td>
-          <td>{{ product.estoque_minimo }}</td>
-          <td>{{ product.quantidade }}</td>
-          <td>
-            <a href="{% url 'add_transaction' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">Nova Transação</a>
-          </td>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Estoque Minimo</th>
+          <th>Qtd</th>
+          <th>Ações</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for product in products %}
+          <tr>
+            <td>{{ product.nome }}</td>
+            <td>{{ product.descricao }}</td>
+            <td>{{ product.estoque_minimo }}</td>
+            <td>{{ product.quantidade }}</td>
+            <td>
+              <a href="{% url 'add_transaction' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">Nova Transação</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   <br>
 {% endblock %}
 

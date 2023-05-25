@@ -1,11 +1,32 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Setor(models.Model):
+    setorNome = models.CharField(max_length=64)
+    def __str__(self):
+        return self.setorNome
+    
+class Categoria(models.Model):
+    categoriaNome = models.CharField(max_length=64)
+    def __str__(self):
+        return self.categoriaNome
+
+class LocalPrateleira(models.Model):
+    localNome = models.CharField(max_length=64)
+    def __str__(self):
+        return self.localNome
+
 class Produto(models.Model):
     nome = models.CharField(max_length=255)
     descricao = models.TextField()
     quantidade = models.PositiveIntegerField()
     estoque_minimo = models.PositiveIntegerField()
+    #categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    #setor = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    #local = models.ForeignKey(LocalPrateleira, on_delete=models.CASCADE)
+    #preco_unitario = models.DecimalField(max_digits=6, decimal_places=2)
+    #validade = models.DateField()
+    
     def __str__(self):
         return self.nome
 
@@ -75,5 +96,8 @@ class Compra(models.Model):
     criado_em = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20,choices=STATUS)
     solicitante = models.ForeignKey(User, on_delete=models.CASCADE) 
+
+
+
 
 # Create your models here.

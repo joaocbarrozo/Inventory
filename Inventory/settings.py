@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-hm9sp-v_dg#29xyi(h%%4=tt$8=1i526yf^0c1p=y#*^v=77fs
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.0.20"]
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'almoxarifado',
+    'django_bootstrap5'
 ]
 
 MIDDLEWARE = [

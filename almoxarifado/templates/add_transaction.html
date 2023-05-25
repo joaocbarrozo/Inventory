@@ -2,9 +2,9 @@
 
 {% block content %}
   <h1>Entrada/Saida</h1>
-  <form method="post">
+  <form class="for-control" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Salvar</button>
+    <button class="btn btn-primary btn-sm mb-1 " type="submit">Salvar</button>
   </form>
 {% endblock %}
