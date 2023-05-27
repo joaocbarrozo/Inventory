@@ -66,6 +66,8 @@
         <tr>
           <th>Nome</th>
           <th>Descrição</th>
+          <th>Categoria</th>
+          <th>Local</th>
           <th>Estoque Minimo</th>
           <th>Qtd</th>
           <th>Ações</th>
@@ -76,10 +78,13 @@
           <tr>
             <td>{{ product.nome }}</td>
             <td>{{ product.descricao }}</td>
+            <td>{{ product.categoria }}</td>
+            <td>{{ product.local }}</td>
             <td>{{ product.estoque_minimo }}</td>
             <td>{{ product.quantidade }}</td>
             <td>
-              <a href="{% url 'add_transaction' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">Nova Transação</a>
+              <a href="{% url 'add_entrada' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">+</a>
+              <a href="{% url 'add_saida' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">-</a>
             </td>
           </tr>
         {% endfor %}

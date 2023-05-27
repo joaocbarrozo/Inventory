@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+  <h1>Entradas</h1>
+ <!-- Painel superior de controles -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-4 text-white p-3">
+        <!-- Botão para adicionar novo produto -->
+        <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#addProductModal">
+          Novo Produto
+        </button>
+      </div>
+      <div class="col-8 text-dark p-3">
+        <!-- Filtro -->
+        <form class="form-control">
+          <label for="nome">Nome:</label>
+          <input type="text" name="name">
+        
+          <label for="quantidade">Quantidade:</label>
+          <input type="number" name="quantity">
+        
+          <button class="btn btn-primary btn-sm mb-1 " type="submit">Filtrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para adicionar um produto -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addProductModalLabel">Novo Produto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="form-control" method="post" action="{% url 'product' %}">
+            {% csrf_token %}
+            {{ form }}
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Salvar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mensagem de sucesso ao adicionar uma entrada-->
+  {% if messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endif %}
+  
+  <!-- Tabela de dados das entradas -->
+  <div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered ">
+      <thead class="table-primary">
+        <tr>
+          <th>Produto</th>
+          <th>Tipo</th>
+          <th>Fornecedor</th>
+          <th>Quantidade</th>
+          <th>Preço Unitário</th>
+          <th>Data</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entrada in entradas %}
+          <tr>
+            <td>{{ entrada.produto }}</td>
+            <td>{{ entrada.tipo }}</td>
+            <td>{{ entrada.fornecedor }}</td>
+            <td>{{ entrada.quantidade }}</td>
+            <td>{{ entrada.preco_unitario }}</td>
+            <td>{{ entrada.criado_em }}</td>
+            <td>
+              <a href="{% url 'add_transaction' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">Nova Transação</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+{% endblock %}
+
