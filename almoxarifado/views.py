@@ -108,24 +108,30 @@ def saidas_view(request):
      #   transactions = transactions.filter(transacao_tipo=transaction_type)
     return render(request, 'saidas.html', {'saidas': saidas})
 
-@login_required    
+@login_required
 def add_saida_view(request):
     if request.method == 'POST':
         form = SaidasForm(request.POST)
-        if form.is_valid():          
-            form.save()
-            messages.success(request, 'Saida salva com sucesso!')
-            return redirect('saidas')
-        else:
-            form = EntradasForm()        
-            # Redirecione para outra página ou retorne uma resposta de sucesso
-            return redirect('product')
+        if form.is_valid():
+            quantidade = form.cleaned_data['quantidade']
+            produto = form.cleaned_data['produto']
+            
+            if quantidade > produto.quantidade:
+                # The entered quantity exceeds the available stock
+                # Display an appropriate error message to the user
+                form.add_error('quantidade', 'A quantidade informada excede o estoque disponível.')
+            else:
+                form.save()
+                messages.success(request, 'Saída salva com sucesso!')
+                return redirect('saidas')
+        # If the form is invalid, render the form with errors
     else:
         product_id = request.GET.get('product_id')
         user_id = request.GET.get('user_id')
         initial_data = {'produto': product_id, 'usuario': user_id}
         form = SaidasForm(initial=initial_data)
-    return render(request, 'add_saida.html', {'form': form})  
+    
+    return render(request, 'add_saida.html', {'form': form})
 
 @login_required    
 def transaction_log(request):

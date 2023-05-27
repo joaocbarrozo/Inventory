@@ -37,6 +37,16 @@ class SaidasForm(forms.ModelForm):
             'quantidade': forms.NumberInput(attrs={'class': 'form-control'}),
             'usuario': forms.Select(attrs={'class': 'form-control'}),
         }
+        
+        def clean_quantidade(self):
+            quantidade = self.cleaned_data.get('quantidade')
+            produto = self.cleaned_data.get('produto')
+
+            if quantidade and produto:
+                if quantidade > produto.quantidade:
+                    raise forms.ValidationError('Quantidade indisponível em estoque.')
+
+            return quantidade
 
 class TransactionForm(forms.ModelForm):
     class Meta:
