@@ -6,13 +6,14 @@ class ProdutoForm(forms.ModelForm):
         model = Produto
         fields = ['nome', 'descricao', 'categoria', 'local','quantidade', 'estoque_minimo']
         widgets = {
-            'nome': forms.TextInput(attrs={'class': 'form-control'}),
-            'descricao': forms.Textarea(attrs={'class': 'form-control'}),
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'autocapitalize': 'characters'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control', 'autocapitalize': 'characters'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
             'local': forms.Select(attrs={'class': 'form-control'}),
             'quantidade': forms.NumberInput(attrs={'class': 'form-control'}),
             'estoque_minimo': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
 
 class EntradasForm(forms.ModelForm):
     class Meta:

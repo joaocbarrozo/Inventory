@@ -6,25 +6,36 @@
  <!-- Painel superior de controles -->
   <div class="container-fluid">
     <div class="row">
-      <div class="col-4 text-white p-3">
+      <div class="col-3 text-white p-3">
         <!-- Botão para adicionar novo produto -->
         <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#addProductModal">
           Novo Produto
         </button>
       </div>
-      <div class="col-8 text-dark p-3">
+      <div class="col-9 text-dark p-3">
         <!-- Filtro -->
         <form class="form-control">
-          <label for="nome">Nome:</label>
-          <input type="text" name="name">
-        
-          <label for="categoria">Categoria:</label>
-          <input type="select" name="categoria">
-
-          <label for="nome">Local:</label>
-          <input type="text" name="local">
-        
-          <button class="btn btn-primary btn-sm mb-1 " type="submit">Filtrar</button>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">  
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" name="name" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">    
+                <label for="categoria" class="form-label">Categoria:</label>
+                <input type="select" name="categoria" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group"> 
+                <label for="nome" class="form-label">Local:</label>
+                <input type="text" name="local" class="form-control">
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm mt-1 " type="submit">Filtrar</button>
         </form>
       </div>
     </div>
@@ -51,6 +62,22 @@
       </div>
     </div>
   </div>
+
+  <!-- Script para aplicar autocapitalize -->
+  <script>
+    // Obtém o formulário do modal
+    const modalFormulario = document.querySelector('#addProductModal form');
+  
+    // Obtém todos os campos de texto do formulário
+    const camposTexto = modalFormulario.querySelectorAll('input[type="text"], textarea');
+  
+    // Adiciona evento de escuta para o evento de digitação em cada campo
+    camposTexto.forEach(function(campo) {
+      campo.addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+      });
+    });
+  </script>
   
   <!-- Mensagem de sucesso ao adicionar um produto -->
   {% if messages %}

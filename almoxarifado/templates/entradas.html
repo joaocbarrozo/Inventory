@@ -6,31 +6,47 @@
  <!-- Painel superior de controles -->
   <div class="container-fluid">
     <div class="row">
-      <div class="col-4 text-white p-3">
-        <!-- Botão para adicionar novo produto -->
-        <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#addProductModal">
-          Novo Produto
-        </button>
-      </div>
-      <div class="col-8 text-dark p-3">
+
+      <div class="col-12 text-dark p-3">
         <!-- Filtro -->
         <form class="form-control">
-          <label for="produto">Produto:</label>
-          <input type="text" name="produto">
-        
-          <label for="tipo">Tipo:</label>
-          <input type="text" name="tipo">
-    
-          <label for="fornecedor">Fornecedor:</label>
-          <input type="text" name="fornecedor">
-          <br>
-          <label for="data_inicial">Data Inicial:</label>
-          <input type="date" name="data_inicial">
-          
-          <label for="data_final">Data Final:</label>
-          <input type="date" name="data_final">
-        
-          <button class="btn btn-primary btn-sm mb-1 " type="submit">Filtrar</button>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="produto" class="form-label">Produto:</label>
+                <input type="text" name="produto" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="tipo" class="form-label">Tipo:</label>
+                <input type="text" name="tipo" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="fornecedor" class="form-label">Fornecedor:</label>
+                <input type="text" name="fornecedor" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="data_inicial" class="form-label">Data Inicial:</label>
+                <input type="date" name="data_inicial" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="data_final" class="form-label">Data Final:</label>
+                <input type="date" name="data_final" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-sm mt-1 " type="submit">Filtrar</button>
         </form>
       </div>
     </div>
