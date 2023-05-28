@@ -5,7 +5,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm, TransactionForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
+from .forms import ProdutoForm, TransactionForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
+from django.db.models import Q
+from datetime import datetime
 
 def login_view(request):
     if request.method == 'POST':
@@ -29,50 +31,66 @@ def home_view(request):
     return render(request, 'home.html', context)
 
 @login_required    
-def product_view(request):
+def produtos_view(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProdutoForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Produto salvo com sucesso!')
-            return redirect('product')
+            return redirect('produtos')
     else:
-        form = ProductForm()
+        form = ProdutoForm()
     
-    #Filtra os produtos por nome e quantidade
-    name = request.GET.get('name')
-    quantity = request.GET.get('quantity')
-    products = Produto.objects.all()
-    if name:
-        products = products.filter(nome__icontains=name)
-    if quantity:
-        products = products.filter(quantidade=quantity)
+    #Filtra os produtos por nome, categoria e local
+    nome = request.GET.get('nome')
+    categoria = request.GET.get('categoria')
+    local = request.GET.get('local')
+    produtos = Produto.objects.all()
+    if nome:
+        produtos = produtos.filter(nome__icontains=nome)
+    if categoria:
+        produtos = produtos.filter(categoria__categoriaNome__icontains=categoria)
+    if local:
+        produtos = produtos.filter(local__localNome__icontains=local)        
         
-    return render(request, 'product.html', {'products': products, 'form': form})
+    return render(request, 'produtos.html', {'produtos': produtos, 'form': form})
 
 @login_required
 def add_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProdutoForm(request.POST)
         if form.is_valid():
            form.save()
            return redirect('product')
     else:
-        form = ProductForm()
+        form = ProdutoForm()
     return render(request, 'add_product.html', {'form': form})
 
-@login_required    
+@login_required
 def entradas_view(request):
     entradas = Entrada.objects.all()
-     # Filtra entradas 
-    entrada_tipo = request.GET.get('entrada_tipo')
-    if entrada_tipo:
-        entradas = entradas.filter(produto__nome__icontains=entrada_tipo)
 
-    # Filter transactions by transaction type
-    #transaction_type = request.GET.get('transaction_type')
-    #if transaction_type:
-     #   transactions = transactions.filter(transacao_tipo=transaction_type)
+    # Filtra entradas
+    produto = request.GET.get('produto')
+    tipo = request.GET.get('tipo')
+    fornecedor = request.GET.get('fornecedor')
+    data_inicial = request.GET.get('data_inicial')
+    data_final = request.GET.get('data_final')
+
+    if data_inicial:
+        data_inicial = datetime.strptime(data_inicial, '%Y-%m-%d').date()
+    if data_final:
+        data_final = datetime.strptime(data_final, '%Y-%m-%d').date()
+
+    if produto:
+        entradas = entradas.filter(Q(produto__nome__icontains=produto))
+    if tipo:
+        entradas = entradas.filter(Q(tipo__icontains=tipo))
+    if fornecedor:
+        entradas = entradas.filter(Q(fornecedor__nome__icontains=fornecedor))
+    if data_inicial and data_final:
+        entradas = entradas.filter(criado_em__range=[data_inicial, data_final])
+
     return render(request, 'entradas.html', {'entradas': entradas})
 
 @login_required    
@@ -88,24 +106,32 @@ def add_entrada_view(request):
             # Redirecione para outra página ou retorne uma resposta de sucesso
             return redirect('product')
     else:
-        product_id = request.GET.get('product_id')
+        produto_id = request.GET.get('produto_id')
         user_id = request.GET.get('user_id')
-        initial_data = {'produto': product_id, 'usuario': user_id}
+        initial_data = {'produto': produto_id, 'usuario': user_id}
         form = EntradasForm(initial=initial_data)
     return render(request, 'add_entrada.html', {'form': form})  
 
 @login_required    
 def saidas_view(request):
     saidas = Saida.objects.all()
-     # Filtra entradas 
-    #entrada_tipo = request.GET.get('entrada_tipo')
-    #if entrada_tipo:
-     #   entradas = entradas.filter(produto__nome__icontains=entrada_tipo)
+    # Filtra saidas 
+    produto = request.GET.get('produto')
+    setor = request.GET.get('setor')
+    data_inicial = request.GET.get('data_inicial')
+    data_final = request.GET.get('data_final')
 
-    # Filter transactions by transaction type
-    #transaction_type = request.GET.get('transaction_type')
-    #if transaction_type:
-     #   transactions = transactions.filter(transacao_tipo=transaction_type)
+    if data_inicial:
+        data_inicial = datetime.strptime(data_inicial, '%Y-%m-%d').date()
+    if data_final:
+        data_final = datetime.strptime(data_final, '%Y-%m-%d').date()
+
+    if produto:
+        saidas = saidas.filter(Q(produto__nome__icontains=produto))
+    if setor:
+        saidas = saidas.filter(Q(setor__setorNome__icontains=setor))
+    if data_inicial and data_final:
+        saidas = saidas.filter(criado_em__range=[data_inicial, data_final])
     return render(request, 'saidas.html', {'saidas': saidas})
 
 @login_required
@@ -126,9 +152,9 @@ def add_saida_view(request):
                 return redirect('saidas')
         # If the form is invalid, render the form with errors
     else:
-        product_id = request.GET.get('product_id')
+        produto_id = request.GET.get('produto_id')
         user_id = request.GET.get('user_id')
-        initial_data = {'produto': product_id, 'usuario': user_id}
+        initial_data = {'produto': produto_id, 'usuario': user_id}
         form = SaidasForm(initial=initial_data)
     
     return render(request, 'add_saida.html', {'form': form})

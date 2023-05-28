@@ -18,8 +18,11 @@
           <label for="nome">Nome:</label>
           <input type="text" name="name">
         
-          <label for="quantidade">Quantidade:</label>
-          <input type="number" name="quantity">
+          <label for="categoria">Categoria:</label>
+          <input type="select" name="categoria">
+
+          <label for="nome">Local:</label>
+          <input type="text" name="local">
         
           <button class="btn btn-primary btn-sm mb-1 " type="submit">Filtrar</button>
         </form>
@@ -36,7 +39,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form class="form-control" method="post" action="{% url 'product' %}">
+          <form class="form-control" method="post" action="{% url 'produtos' %}">
             {% csrf_token %}
             {{ form }}
             <div class="modal-footer">
@@ -74,17 +77,17 @@
         </tr>
       </thead>
       <tbody>
-        {% for product in products %}
+        {% for produto in produtos %}
           <tr>
-            <td>{{ product.nome }}</td>
-            <td>{{ product.descricao }}</td>
-            <td>{{ product.categoria }}</td>
-            <td>{{ product.local }}</td>
-            <td>{{ product.estoque_minimo }}</td>
-            <td>{{ product.quantidade }}</td>
+            <td>{{ produto.nome }}</td>
+            <td>{{ produto.descricao }}</td>
+            <td>{{ produto.categoria }}</td>
+            <td>{{ produto.local }}</td>
+            <td>{{ produto.estoque_minimo }}</td>
+            <td>{{ produto.quantidade }}</td>
             <td>
-              <a href="{% url 'add_entrada' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">+</a>
-              <a href="{% url 'add_saida' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">-</a>
+              <a href="{% url 'add_entrada' %}?produto_id={{ produto.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">+</a>
+              <a href="{% url 'add_saida' %}?produto_id={{ produto.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">-</a>
             </td>
           </tr>
         {% endfor %}

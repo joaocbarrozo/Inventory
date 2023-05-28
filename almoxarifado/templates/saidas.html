@@ -15,11 +15,17 @@
       <div class="col-8 text-dark p-3">
         <!-- Filtro -->
         <form class="form-control">
-          <label for="nome">Nome:</label>
-          <input type="text" name="name">
+          <label for="produto">Produto:</label>
+          <input type="text" name="produto">
         
-          <label for="quantidade">Quantidade:</label>
-          <input type="number" name="quantity">
+          <label for="setor">Setor:</label>
+          <input type="text" name="setor">
+          <br>
+          <label for="data_inicial">Data Inicial:</label>
+          <input type="date" name="data_inicial">
+          
+          <label for="data_final">Data Final:</label>
+          <input type="date" name="data_final">
         
           <button class="btn btn-primary btn-sm mb-1 " type="submit">Filtrar</button>
         </form>
@@ -36,7 +42,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form class="form-control" method="post" action="{% url 'product' %}">
+          <form class="form-control" method="post" action="{% url 'produtos' %}">
             {% csrf_token %}
             {{ form }}
             <div class="modal-footer">
@@ -68,7 +74,6 @@
           <th>Setor</th>
           <th>Quantidade</th>
           <th>Data</th>
-          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -78,9 +83,6 @@
             <td>{{ saida.setor }}</td>
             <td>{{ saida.quantidade }}</td>
             <td>{{ saida.criado_em }}</td>
-            <td>
-              <a href="{% url 'add_transaction' %}?product_id={{ product.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">Nova Transação</a>
-            </td>
           </tr>
         {% endfor %}
       </tbody>
