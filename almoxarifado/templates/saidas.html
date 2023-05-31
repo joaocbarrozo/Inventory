@@ -4,12 +4,19 @@
 {% block content %}
   <h1>Saídas</h1>
  <!-- Painel superior de controles -->
-  <div class="container-fluid">
-    <div class="row">
+ <div class="container-fluid">
+  <div class="row">
+    <div class="col-3 text-white p-3">
+      <!-- Botão para exibir/esconder filtros -->
+      <button type="button" class="btn btn-primary mt-1" id="botaoFiltros" onClick="esconderFiltro()">
+        Filtros
+      </button>
+    </div>
     
-      <div class="col-12 text-dark p-3">
-        <!-- Filtro -->
-        <form class="form-control">
+      <div class="col-9 text-dark p-3">
+        <!-- Filtros -->
+        <form class="form-control" id="formFiltro">
+         
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -39,9 +46,9 @@
               </div>
             </div>
           </div>
-          
-        
+
           <button class="btn btn-primary btn-sm mt-1 " type="submit">Filtrar</button>
+        
         </form>
       </div>
     </div>
@@ -103,4 +110,6 @@
     </table>
   </div>
   <br>
+
+
 {% endblock %}

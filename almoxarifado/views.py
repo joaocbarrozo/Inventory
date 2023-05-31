@@ -45,7 +45,7 @@ def produtos_view(request):
     nome = request.GET.get('nome')
     categoria = request.GET.get('categoria')
     local = request.GET.get('local')
-    produtos = Produto.objects.all()
+    produtos = Produto.objects.all().order_by("nome")
     if nome:
         produtos = produtos.filter(nome__icontains=nome)
     if categoria:
@@ -68,7 +68,7 @@ def add_product(request):
 
 @login_required
 def entradas_view(request):
-    entradas = Entrada.objects.all()
+    entradas = Entrada.objects.all().order_by("-criado_em")
 
     # Filtra entradas
     produto = request.GET.get('produto')
@@ -114,7 +114,7 @@ def add_entrada_view(request):
 
 @login_required    
 def saidas_view(request):
-    saidas = Saida.objects.all()
+    saidas = Saida.objects.all().order_by("-criado_em")
     # Filtra saidas 
     produto = request.GET.get('produto')
     setor = request.GET.get('setor')
