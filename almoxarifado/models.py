@@ -108,10 +108,10 @@ class Pedido(models.Model):
         ('Realizado', 'realizado'),
         ('Cancelado', 'cancelado')
     )
-    
+    produtos = models.ManyToManyField(Produto, through="ProdutoPedido")
     criado_em = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20,choices=STATUS)
-    solicitante = models.ForeignKey(User, on_delete=models.CASCADE)
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
 
 class ProdutoPedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)

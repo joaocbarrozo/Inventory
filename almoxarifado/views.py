@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Produto, Transacao, Pedido, ProdutoPedido, Entrada, Saida
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -158,6 +158,67 @@ def add_saida_view(request):
         form = SaidasForm(initial=initial_data)
     
     return render(request, 'add_saida.html', {'form': form})
+
+@login_required    
+def pedidos_view(request):
+    if request.method == 'POST':
+        form = PedidoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Pedido salvo com sucesso!')
+            return redirect('pedidos')
+    else:
+        form = PedidoForm()
+    
+    pedidos = Pedido.objects.all().order_by("-criado_em")
+    #Filtra os produtos por nome, categoria e local
+    id = request.GET.get('id')
+    fornecedor = request.GET.get('fornecedor')
+    status = request.GET.get('status')
+    data_inicial = request.GET.get('data_inicial')
+    data_final = request.GET.get('data_final')
+
+    if data_inicial:
+        data_inicial = datetime.strptime(data_inicial, '%Y-%m-%d').date()
+    if data_final:
+        data_final = datetime.strptime(data_final, '%Y-%m-%d').date()
+    
+    if id:
+        pedidos = pedidos.filter(id__icontains=id)
+    if fornecedor:
+        pedidos = pedidos.filter(fornecedor__nome__icontains=fornecedor)
+    if status:
+        pedidos = pedidos.filter(status__icontains=status)        
+        
+    return render(request, 'pedidos.html', {'pedidos': pedidos, 'form': form})
+
+@login_required
+def add_produto_pedido_view(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+
+    if request.method == 'POST':
+        form = ProdutoPedidoForm(request.POST)
+        if form.is_valid():
+            produto_pedido = form.save(commit=False)
+            produto_pedido.pedido = pedido
+            produto_pedido.save()
+            messages.success(request, 'Produto adicionado ao pedido com sucesso!')
+            return redirect('detalhes_pedido', pedido_id=pedido.id)
+    else:
+        form = ProdutoPedidoForm()
+
+    todos_produtos = Produto.objects.all()  # Obtenha todos os produtos disponíveis
+
+    return render(request, 'detalhes_pedido.html', {'form': form, 'pedido': pedido, 'todos_produtos': todos_produtos})
+
+
+@login_required
+def detalhes_pedido_view(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    produtos = pedido.produtos.all()
+    
+    return render(request, 'detalhes_pedido.html', {'pedido': pedido, 'produtos': produtos})
+
 
 @login_required    
 def transaction_log(request):

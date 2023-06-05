@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+
+    <h1>Detalhes do Pedido</h1>
+
+    <form method="post" action="#">
+        {% csrf_token %}
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="id" class="form-label">ID:</label>
+                <input type="text" id="id" class="form-control" value="{{ pedido.id }}" readonly>
+            </div>
+            <div class="mb-3 col-6">
+                <label for="status" class="form-label">Status:</label>
+                <input type="text" id="status" class="form-control" value="{{ pedido.status }}" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="fornecedor" class="form-label">Fornecedor:</label>
+                <input type="text" id="fornecedor" class="form-control" value="{{ pedido.fornecedor }}" readonly>
+            </div>
+            <div class="mb-3 col-6">
+                <label for="criado_em" class="form-label">Data de Criação:</label>
+                <input type="text" id="criado_em" class="form-control" value="{{ pedido.criado_em }}" readonly>
+            </div>
+        </div>
+    </form>
+
+    <h2>Produtos do Pedido</h2>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome do Produto</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.quantidade }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">Nenhum produto encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Adicionar Produto ao Pedido</h2>
+    <form method="post" action="{% url 'add_produto_pedido' pedido_id=pedido.id %}" class="form">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-primary">Adicionar Produto</button>
+    </form>
+
+{% endblock %}

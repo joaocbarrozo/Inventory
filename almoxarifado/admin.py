@@ -10,15 +10,11 @@ class ProdutoAdmin(admin.ModelAdmin):
 class FornecedorAdmin(admin.ModelAdmin):
     pass
 
-#@admin.register(Transacao)
-#class TransacaoAdmin(admin.ModelAdmin):
-#    pass
-
-#@admin.register(ProdutoPedido)
+@admin.register(ProdutoPedido)
 #class ProdutoPedidoAdmin(admin.ModelAdmin):
 #    pass
 
-#@admin.register(Pedido)
+@admin.register(Pedido)
 #class PedidoAdmin(admin.ModelAdmin):
 #    pass
 

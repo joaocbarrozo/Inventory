@@ -75,9 +75,17 @@ class TransactionForm(forms.ModelForm):
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedido
-        fields = []
+        fields = ["fornecedor", "status"]
+        widgets = {
+            'fornecedor': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+        }
 
 class ProdutoPedidoForm(forms.ModelForm):
     class Meta:
         model = ProdutoPedido
-        fields = ['produto', 'quantidade']
+        fields = ["produto", "quantidade"]
+        widgets = {
+            'produto': forms.Select(attrs={'class': 'form-control'}),
+            'quantidade': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
