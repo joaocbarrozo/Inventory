@@ -14,26 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import add_produto_pedido_view, detalhes_pedido_view, login_view, home_view, pedidos_view, produtos_view, logout_view, transaction_log, add_product, add_transaction, lista_pedidos, criar_pedido, entradas_view, add_entrada_view, saidas_view, add_saida_view
+from .views import add_produto_pedido_view, detalhes_pedido_view, login_view, home_view, pedidos_view, produtos_view, logout_view, remover_produto_pedido_view, entradas_view, add_entrada_view, saidas_view, add_saida_view
 
 urlpatterns = [
-    # other URL patterns
     path('', login_view, name='login'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('home/', home_view, name='home'),
     path('produtos/', produtos_view, name='produtos'),
-    #path('transaction/', transaction_log, name='transaction_log'),
-    #path('add-product/', add_product, name='add_product'),
-    #path('add-transaction/', add_transaction, name='add_transaction'),
     path('pedidos/', pedidos_view, name='pedidos'),
-    path('criar-pedidos/', criar_pedido, name='criar_pedido'),
     path('entradas/', entradas_view, name='entradas'),
     path('add_entrada/', add_entrada_view, name='add_entrada'),
     path('saidas/', saidas_view, name='saidas'),
     path('add_saida/', add_saida_view, name='add_saida'),
     path('pedido/<int:pedido_id>/adicionar_produto/', add_produto_pedido_view, name='add_produto_pedido'),
     path('pedido/<int:pedido_id>/', detalhes_pedido_view, name='detalhes_pedido'),
+    path('pedido/<int:pedido_id>/produto/<int:produto_pedido_id>/remover/', remover_produto_pedido_view, name='remover_produto_pedido')
 ]
 
 

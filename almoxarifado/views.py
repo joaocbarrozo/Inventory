@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Produto, Transacao, Pedido, ProdutoPedido, Entrada, Saida
+from .models import Produto, Pedido, ProdutoPedido, Entrada, Saida
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import ProdutoForm, TransactionForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
+from .forms import ProdutoForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
 from django.db.models import Q
 from datetime import datetime
 
@@ -202,7 +202,7 @@ def add_produto_pedido_view(request, pedido_id):
             produto_pedido = form.save(commit=False)
             produto_pedido.pedido = pedido
             produto_pedido.save()
-            messages.success(request, 'Produto adicionado ao pedido com sucesso!')
+            #messages.success(request, 'Produto adicionado ao pedido com sucesso!')
             return redirect('detalhes_pedido', pedido_id=pedido.id)
     else:
         form = ProdutoPedidoForm()
@@ -215,80 +215,37 @@ def add_produto_pedido_view(request, pedido_id):
 @login_required
 def detalhes_pedido_view(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
-    produtos = pedido.produtos.all()
-    
-    return render(request, 'detalhes_pedido.html', {'pedido': pedido, 'produtos': produtos})
+    produtos_pedidos = ProdutoPedido.objects.filter(pedido=pedido)
 
-
-@login_required    
-def transaction_log(request):
-    transactions = Transacao.objects.all()
-     # Filter transactions by product name
-    product_name = request.GET.get('product_name')
-    if product_name:
-        transactions = transactions.filter(produto__nome__icontains=product_name)
-
-    # Filter transactions by transaction type
-    transaction_type = request.GET.get('transaction_type')
-    if transaction_type:
-        transactions = transactions.filter(transacao_tipo=transaction_type)
-    return render(request, 'transaction_log.html', {'transactions': transactions})
-
-@login_required
-def add_transaction(request):
     if request.method == 'POST':
-        form = TransactionForm(request.POST)
+        form = ProdutoPedidoForm(request.POST)
         if form.is_valid():
-            quantidade = form.cleaned_data['quantidade']
-            produto = form.cleaned_data['produto']
-            tipo = form.cleaned_data['transacao_tipo']
-
-            if tipo == 'Saida' and quantidade > produto.quantidade:
-                # A quantidade informada excede a quantidade disponível em estoque
-                # Exiba uma mensagem de erro adequada para o usuário
-                form.add_error('quantidade', 'A quantidade informada excede o estoque disponível.')
-            else:
-                # A quantidade informada está disponível em estoque ou é uma transação de entrada
-                # Faça o processamento adicional e salve o objeto Transacao
-                transacao = form.save()
-                
-                if tipo == 'saida':
-                    # Restrinja a quantidade no estoque apenas para transações de saída
-                    produto.quantidade -= quantidade
-                    produto.save()
-
-                # Redirecione para outra página ou retorne uma resposta de sucesso
-                return redirect('product')
-    else:
-        product_id = request.GET.get('product_id')
-        user_id = request.GET.get('user_id')
-        initial_data = {'produto': product_id, 'usuario': user_id}
-        form = TransactionForm(initial=initial_data)
-    return render(request, 'add_transaction.html', {'form': form})
-    
-@login_required
-def lista_pedidos(request):
-    pedidos = Pedido.objects.filter(status='Realizado')
-    return render(request, 'lista_pedidos.html', {'pedidos': pedidos})
-
-@login_required
-def criar_pedido(request):
-    if request.method == 'POST':
-        pedido_form = PedidoForm(request.POST)
-        produto_pedido_form = ProdutoPedidoForm(request.POST)
-        if pedido_form.is_valid() and produto_pedido_form.is_valid():
-            pedido = pedido_form.save(commit=False)
-            pedido.status = 'Aberto'
-            pedido.solicitante = request.user
-            pedido.save()
-            produto_pedido = produto_pedido_form.save(commit=False)
+            produto_pedido = form.save(commit=False)
             produto_pedido.pedido = pedido
             produto_pedido.save()
-            return redirect('lista_pedido')
+            # messages.success(request, 'Produto adicionado ao pedido com sucesso!')
+            return redirect('detalhes_pedido', pedido_id=pedido.id)
     else:
-        pedido_form = PedidoForm()
-        produto_pedido_form = ProdutoPedidoForm()
-    return render(request, 'criar_pedido.html', {'pedido_form': pedido_form, 'produto_pedido_form': produto_pedido_form})
+        form = ProdutoPedidoForm()
+
+    todos_produtos = Produto.objects.all()  # Obtenha todos os produtos disponíveis
+
+    return render(request, 'detalhes_pedido.html', {'form': form, 'pedido': pedido, 'produtos_pedidos': produtos_pedidos, 'todos_produtos': todos_produtos})
+
+
+@login_required
+def remover_produto_pedido_view(request, pedido_id, produto_pedido_id):
+    # Recupera o produto do pedido
+    produto_pedido = get_object_or_404(ProdutoPedido, id=produto_pedido_id)
+
+    # Verifica se o produto pertence ao pedido fornecido
+    if produto_pedido.pedido_id != pedido_id:
+        return redirect('detalhes_pedido', pedido_id=pedido_id)
+
+    # Remove o produto do pedido
+    produto_pedido.delete()
+
+    return redirect('detalhes_pedido', pedido_id=pedido_id)
 
 
 # Create your views here.
