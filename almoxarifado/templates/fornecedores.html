@@ -2,14 +2,14 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-  <h1>Pedidos</h1>
+  <h1>Fornecedores</h1>
  <!-- Painel superior de controles -->
   <div class="container-fluid">
     <div class="row">
       <div class="col-3 text-white p-3">
         <!-- Botão para adicionar novo produto -->
-        <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#addPedidoModal">
-          Novo Pedido
+        <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#addProductModal">
+          Novo Fornecedor
         </button>
         <!-- Botão para exibir/esconder filtros -->
         <button type="button" class="btn btn-primary mt-1" id="botaoFiltros" onClick="esconderFiltro()">
@@ -22,55 +22,39 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">  
-                <label for="id" class="form-label">Número:</label>
-                <input type="text" name="id" class="form-control">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" name="name" class="form-control">
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">    
-                <label for="fornecedor" class="form-label">Fornecedor:</label>
-                <input type="text" name="fornecedor" class="form-control">
+                <label for="fone" class="form-label">Telefone:</label>
+                <input type="text" name="fone" class="form-control">
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group"> 
-                <label for="status" class="form-label">Status:</label>
-                <input type="select" name="status" class="form-control">
+                <label for="email" class="form-label">E-mail:</label>
+                <input type="text" name="email" class="form-control">
               </div>
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="data_inicial" class="form-label">Data Inicial:</label>
-                <input type="date" name="data_inicial" class="form-control">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="data_final" class="form-label">Data Final:</label>
-                <input type="date" name="data_final" class="form-control">
-              </div>
-            </div>
-          </div>
-
           <button class="btn btn-primary btn-sm mt-1 " type="submit">Filtrar</button>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- Modal para adicionar um produto -->
-  <div class="modal fade" id="addPedidoModal" tabindex="-1" aria-labelledby="addPedidoModalLabel" aria-hidden="true">
+  <!-- Modal para adicionar um fornecedor -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addPedidoModalLabel">Novo Pedido</h5>
+          <h5 class="modal-title" id="addProductModalLabel">Novo Fornecedor</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form class="form-control" method="post" action="{% url 'pedidos' %}">
+          <form class="form-control" method="post" action="{% url 'fornecedores' %}">
             {% csrf_token %}
             {{ form }}
             <div class="modal-footer">
@@ -86,7 +70,7 @@
   <!-- Script para aplicar autocapitalize -->
   <script>
     // Obtém o formulário do modal
-    const modalFormulario = document.querySelector('#addPedidoModal form');
+    const modalFormulario = document.querySelector('#addProductModal form');
   
     // Obtém todos os campos de texto do formulário
     const camposTexto = modalFormulario.querySelectorAll('input[type="text"], textarea');
@@ -99,7 +83,7 @@
     });
   </script>
   
-  <!-- Mensagem de sucesso ao adicionar um pedido -->
+  <!-- Mensagem de sucesso ao adicionar um produto -->
   {% if messages %}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {% for message in messages %}
@@ -114,23 +98,28 @@
     <table class="table table-hover table-striped table-bordered ">
       <thead class="table-primary">
         <tr>
-          <th>Número</th>
-          <th>Fornecedor</th>
-          <th>Status</th>
-          <th>Data</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for pedido in pedidos %}
-          <tr>
-            <td>{{ pedido.id }}</td>
-            <td>{{ pedido.fornecedor }}</td>
-            <td>{{ pedido.status }}</td>
-            <td>{{ pedido.criado_em }}</td>
-            <td>
-              <a href="{% url 'detalhes_pedido' pedido_id=pedido.id %}" class="btn btn-primary btn-sm">Detalhes</a>
-              <a href="{% url 'editar_pedido' pedido_id=pedido.id %}" class="btn btn-primary btn-sm">Editar</a>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>E-mail</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for fornecedor in fornecedores %}
+            <tr>
+              <td>{{ fornecedor.nome }}</td>
+              <td>{{ fornecedor.fone }}</td>
+              <td>{{ fornecedor.email }}</td>
+              <td class="remover_print">
+                <a href="{% url 'editar_fornecedor' fornecedor_id=fornecedor.id %}" class="btn btn-primary btn-sm">Editar</a>
+                <form method="post"
+                    action="{% url 'remover_fornecedor' fornecedor_id=fornecedor.id %}"
+                    class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm remover-produto-button"
+                            data-fornecedor-id="{{ fornecedor.id }}">Remover</button>
+                    </form>
+              </td>
             </td>
           </tr>
         {% endfor %}
@@ -138,5 +127,22 @@
     </table>
   </div>
   <br>
+
+<!-- Código JavaScript/jQuery -->
+<script>
+    $('.remover-produto-button').click(function (event) {
+        var fornecedorId = $(this).data('fornecedor-id');
+        var confirmation = confirm("Tem certeza de que deseja excluir este fornecedor?");
+        
+        if (confirmation) {
+            var form = $('<form method="post" action="/fornecedores/remover/' + fornecedorId + '/"></form>');
+            $('body').append(form);
+            form.submit();
+        }
+    });
+    
+</script>
+
+
 {% endblock %}
 

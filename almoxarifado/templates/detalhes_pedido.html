@@ -7,13 +7,13 @@
 
 <form method="post" action="#">
     {% csrf_token %}
-    <div class="row">
+    <div class="row remover_print">
         <div class="mb-3 col-6">
             <label for="id" class="form-label">ID:</label>
             <input type="text" id="id" class="form-control" value="{{ pedido.id }}" readonly>
         </div>
         <div class="mb-3 col-6">
-            <label for="status" class="form-label">Status:</label>
+            <label for="status" class="form-label ">Status:</label>
             <input type="text" id="status" class="form-control" value="{{ pedido.status }}" readonly>
         </div>
     </div>
@@ -36,7 +36,7 @@
             <tr>
                 <th>Nome do Produto</th>
                 <th>Quantidade</th>
-                <th>Ações</th>
+                <th class="remover_print">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -44,7 +44,7 @@
             <tr>
                 <td>{{ produto.produto.nome }}</td>
                 <td>{{ produto.quantidade }}</td>
-                <td>
+                <td class="remover_print">
                     <form method="post"
                         action="{% url 'remover_produto_pedido' pedido_id=pedido.id produto_pedido_id=produto.id %}"
                         class="d-inline">
@@ -64,9 +64,12 @@
 </div>
 
 <!-- Botão para abrir o modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdicionarProduto">
+<button type="button" class="btn btn-primary remover_print" data-bs-toggle="modal" data-bs-target="#modalAdicionarProduto">
     Adicionar Produto
 </button>
+<!-- Botão para imprimir o pedido -->
+<button type="button" class="btn btn-secondary remover_print" onclick="imprimirPedido()">Imprimir Pedido</button>
+
 
 <!-- Modal -->
 <div class="modal fade" id="modalAdicionarProduto" tabindex="-1" aria-labelledby="modalAdicionarProdutoLabel"
@@ -83,8 +86,8 @@
                     method="post">
                     {% csrf_token %}
                     {{ form }}
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="mt2 btn btn-primary">Salvar</button>
+                    <button type="button" class="mt2 btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </form>
             </div>
         </div>
@@ -109,6 +112,11 @@
             }
         });
     });
+
+    // Função para imprimir o pedido
+    function imprimirPedido() {
+       window.print(); // Aciona a função de impressão do navegador
+    }
 </script>
 
 {% endblock %}

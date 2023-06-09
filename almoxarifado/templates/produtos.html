@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <!-- Modal para adicionar um produto -->
+  <!-- Modal para adicionar um fornecedor -->
   <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -119,6 +119,7 @@
             <td>
               <a href="{% url 'add_entrada' %}?produto_id={{ produto.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">+</a>
               <a href="{% url 'add_saida' %}?produto_id={{ produto.id }}&user_id={{ request.user.id }}" class="btn btn-primary btn-sm">-</a>
+              <a href="{% url 'editar_produto' produto_id=produto.id %}" class="btn btn-primary btn-sm">Editar</a>
             </td>
           </tr>
         {% endfor %}

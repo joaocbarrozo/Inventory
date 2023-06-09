@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Produto, Pedido, ProdutoPedido, Entrada, Saida
+from .models import Fornecedor, Produto, Pedido, ProdutoPedido, Entrada, Saida
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import ProdutoForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
+from .forms import FornecedorForm, ProdutoForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
 from django.db.models import Q
 from datetime import datetime
 
@@ -211,6 +211,20 @@ def add_produto_pedido_view(request, pedido_id):
 
     return render(request, 'detalhes_pedido.html', {'form': form, 'pedido': pedido, 'todos_produtos': todos_produtos})
 
+@login_required
+def editar_produto_view(request, produto_id):
+    produto = get_object_or_404(Produto, id=produto_id)
+    
+    if request.method == 'POST':
+        form = ProdutoForm(request.POST, instance=produto)
+        if form.is_valid():
+            form.save()
+            return redirect('produtos')
+    else:
+        form = ProdutoForm(instance=produto)
+    
+    return render(request, 'editar_produto.html', {'form': form, 'produto': produto})
+
 
 @login_required
 def detalhes_pedido_view(request, pedido_id):
@@ -246,6 +260,69 @@ def remover_produto_pedido_view(request, pedido_id, produto_pedido_id):
     produto_pedido.delete()
 
     return redirect('detalhes_pedido', pedido_id=pedido_id)
+
+@login_required
+def editar_pedido_view(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    
+    if request.method == 'POST':
+        form = PedidoForm(request.POST, instance=pedido)
+        if form.is_valid():
+            form.save()
+            return redirect('pedidos')
+    else:
+        form = PedidoForm(instance=pedido)
+    
+    return render(request, 'editar_pedido.html', {'form': form, 'pedido': pedido})
+
+@login_required
+def fornecedores_view(request):
+    fornecedores = Fornecedor.objects.all()
+    #Filtros
+    nome = request.GET.get('nome')
+    fone = request.GET.get('fone')
+    email = request.GET.get('email')
+  
+    if nome:
+        fornecedores = fornecedores.filter(nome__icontains=nome)
+    if fone:
+        fornecedores = fornecedores.filter(fone__icontains=fone)
+    if email:
+        fornecedores = fornecedores.filter(email__icontains=email)  
+    if request.method == 'POST':
+        form = FornecedorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('fornecedor_list')
+    else:
+        form = FornecedorForm()
+    
+    return render(request, 'fornecedores.html', {'fornecedores': fornecedores, 'form': form})
+
+@login_required
+def editar_fornecedor_view(request, fornecedor_id):
+    fornecedor = get_object_or_404(Fornecedor, id=fornecedor_id)
+
+    if request.method == 'POST':
+        form = FornecedorForm(request.POST, instance=fornecedor)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Fornecedor salvo com sucesso!')
+            return redirect('fornecedores')
+    else:
+        form = FornecedorForm(instance=fornecedor)
+
+    return render(request, 'editar_fornecedor.html', {'form': form, 'fornecedor': fornecedor})
+
+@login_required
+def remover_fornecedor_view(request, fornecedor_id):
+    fornecedor = get_object_or_404(Fornecedor, id=fornecedor_id)
+    
+    if request.method == 'POST':
+        fornecedor.delete()
+        return redirect('fornecedores')
+    
+    return redirect('fornecedores')
 
 
 # Create your views here.
