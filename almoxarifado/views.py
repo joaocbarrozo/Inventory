@@ -293,7 +293,7 @@ def fornecedores_view(request):
         form = FornecedorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('fornecedor_list')
+            return redirect('fornecedores')
     else:
         form = FornecedorForm()
     
