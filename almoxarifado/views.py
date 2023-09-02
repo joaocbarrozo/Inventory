@@ -41,17 +41,18 @@ def produtos_view(request):
     else:
         form = ProdutoForm()
     
+    produtos = Produto.objects.all().order_by("nome")
     #Filtra os produtos por nome, categoria e local
     nome = request.GET.get('nome')
     categoria = request.GET.get('categoria')
     local = request.GET.get('local')
-    produtos = Produto.objects.all().order_by("nome")
+    
     if nome:
-        produtos = produtos.filter(nome__icontains=nome)
+        produtos = produtos.filter(Q(nome__icontains=nome))
     if categoria:
-        produtos = produtos.filter(categoria__categoriaNome__icontains=categoria)
+        produtos = produtos.filter(Q(categoria__categoriaNome__icontains=categoria))
     if local:
-        produtos = produtos.filter(local__localNome__icontains=local)        
+        produtos = produtos.filter(Q(local__localNome__icontains=local))        
         
     return render(request, 'produtos.html', {'produtos': produtos, 'form': form})
 

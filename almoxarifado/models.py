@@ -29,8 +29,8 @@ class Produto(models.Model):
 
 class Fornecedor(models.Model):
     nome = models.CharField(max_length=255)
-    fone = models.CharField(max_length=20)
-    email = models.EmailField()
+    fone = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
     def __str__(self):
         return self.nome
 
