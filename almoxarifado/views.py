@@ -5,9 +5,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import FornecedorForm, ProdutoForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
+from .forms import FiltroDataForm, FornecedorForm, ProdutoForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
 from django.db.models import Q
 from datetime import datetime
+from django.db.models import Sum, F, Q
 
 def login_view(request):
     if request.method == 'POST':
@@ -26,9 +27,56 @@ def logout_view(request):
     
 @login_required    
 def home_view(request):
-    products = Produto.objects.all()
-    context = {'products': products}
+    produtos = Produto.objects.all().order_by('nome')
+    produtosAtual = produtos.filter(quantidade__gt=0)
+    context = {'produtos': produtosAtual}
     return render(request, 'home.html', context)
+
+@login_required    
+def abaixo_est_min_view(request):
+    produtos = Produto.objects.all().order_by('nome')
+    abaixoEstMin = produtos.filter(quantidade__lt=F('estoque_minimo'))
+    context = {'produtos': abaixoEstMin}
+    return render(request, 'abaixo_est_min.html', context)
+
+@login_required
+def relatorio_consumo_view(request):
+    saidas = []
+    if request.method == 'GET':
+        form = FiltroDataForm(request.GET)
+        if form.is_valid():
+            data_inicial = form.cleaned_data['data_inicial']
+            data_final = form.cleaned_data['data_final']
+
+            saidas = (
+                Saida.objects.filter(criado_em__range=(data_inicial, data_final))
+                .values('produto', 'produto__nome')
+                .annotate(quantidade_total=Sum('quantidade'))
+                .order_by('produto__nome')
+            )
+    else:
+        form = FiltroDataForm()
+
+    context = {'form': form, 'saidas': saidas}
+    return render(request, 'relatorio_consumo.html', context)
+
+
+
+
+@login_required
+def dashboard_view(request):
+    # Cálculo do valor total em estoque
+    valor_total_estoque = Produto.objects.aggregate(Sum('quantidade'))['quantidade__sum']
+
+    # Quantidade de produtos abaixo do estoque mínimo
+    produtos_abaixo_minimo = Produto.objects.filter(quantidade__lt=F('estoque_minimo')).count()
+
+    context = {
+        'valor_total_estoque': valor_total_estoque,
+        'produtos_abaixo_minimo': produtos_abaixo_minimo,
+    }
+
+    return render(request, 'dashboard.html', context)
 
 @login_required    
 def produtos_view(request):

@@ -76,3 +76,7 @@ class FornecedorForm(forms.ModelForm):
             'fone': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
+    
+class FiltroDataForm(forms.Form):
+    data_inicial = forms.DateField(label='Data Inicial', widget=forms.DateInput(attrs={'type': 'date'}))
+    data_final = forms.DateField(label='Data Final', widget=forms.DateInput(attrs={'type': 'date'}))

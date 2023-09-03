@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import add_produto_pedido_view, detalhes_pedido_view, editar_fornecedor_view, editar_pedido_view, editar_produto_view, fornecedores_view, login_view, home_view, pedidos_view, produtos_view, logout_view, remover_fornecedor_view, remover_produto_pedido_view, entradas_view, add_entrada_view, saidas_view, add_saida_view
+from .views import abaixo_est_min_view, add_produto_pedido_view, dashboard_view, detalhes_pedido_view, editar_fornecedor_view, editar_pedido_view, editar_produto_view, fornecedores_view, login_view, home_view, pedidos_view, produtos_view, logout_view, relatorio_consumo_view, remover_fornecedor_view, remover_produto_pedido_view, entradas_view, add_entrada_view, saidas_view, add_saida_view
 
 urlpatterns = [
     path('', login_view, name='login'),
@@ -35,6 +35,9 @@ urlpatterns = [
     path('fornecedores/', fornecedores_view, name='fornecedores'),
     path('fornecedores/editar/<int:fornecedor_id>/', editar_fornecedor_view, name='editar_fornecedor'),
     path('fornecedores/remover/<int:fornecedor_id>/',remover_fornecedor_view, name='remover_fornecedor'),
+    path('dashboard/', dashboard_view, name='dashboard'),
+    path('abaixo_est_min/', abaixo_est_min_view, name='abaixo_est_min'),
+    path('relatorio_consumo/', relatorio_consumo_view, name='relatorio_consumo'),
 ]
 
 

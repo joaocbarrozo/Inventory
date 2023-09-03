@@ -6,3 +6,8 @@ function esconderFiltro() {
       formFiltro.style.display = "none";
     }
   }
+
+    // Função para imprimir 
+  function imprimir() {
+     window.print(); // Aciona a função de impressão do navegador
+  }
