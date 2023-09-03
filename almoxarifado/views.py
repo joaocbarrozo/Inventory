@@ -46,15 +46,15 @@ def produtos_view(request):
     nome = request.GET.get('nome')
     categoria = request.GET.get('categoria')
     local = request.GET.get('local')
-    
+        
     if nome:
         produtos = produtos.filter(Q(nome__icontains=nome))
     if categoria:
         produtos = produtos.filter(Q(categoria__categoriaNome__icontains=categoria))
     if local:
-        produtos = produtos.filter(Q(local__localNome__icontains=local))        
+            produtos = produtos.filter(Q(local__localNome__icontains=local))        
         
-    return render(request, 'produtos.html', {'produtos': produtos, 'form': form})
+    return render(request, 'produtos.html', {'produtos': produtos, 'form': form })
 
 @login_required
 def add_product(request):

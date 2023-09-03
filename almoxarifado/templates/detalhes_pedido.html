@@ -35,6 +35,7 @@
         <thead class="table-primary">
             <tr>
                 <th>Nome do Produto</th>
+                <th>Descrição</th>
                 <th>Quantidade</th>
                 <th class="remover_print">Ações</th>
             </tr>
@@ -43,6 +44,7 @@
             {% for produto in produtos_pedidos %}
             <tr>
                 <td>{{ produto.produto.nome }}</td>
+                <td>{{ produto.produto.descricao }}</td>
                 <td>{{ produto.quantidade }}</td>
                 <td class="remover_print">
                     <form method="post"
