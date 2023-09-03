@@ -48,12 +48,12 @@ def produtos_view(request):
     local = request.GET.get('local')
         
     if nome:
-        produtos = produtos.filter(Q(nome__icontains=nome))
+        produtos = produtos.filter(nome__icontains=nome)
     if categoria:
-        produtos = produtos.filter(Q(categoria__categoriaNome__icontains=categoria))
+        produtos = produtos.filter(categoria__categoriaNome__icontains=categoria)
     if local:
-            produtos = produtos.filter(Q(local__localNome__icontains=local))        
-        
+        produtos = produtos.filter(local__localNome__icontains=local)        
+    
     return render(request, 'produtos.html', {'produtos': produtos, 'form': form })
 
 @login_required
@@ -91,7 +91,7 @@ def entradas_view(request):
         entradas = entradas.filter(Q(fornecedor__nome__icontains=fornecedor))
     if data_inicial and data_final:
         entradas = entradas.filter(criado_em__range=[data_inicial, data_final])
-
+    
     return render(request, 'entradas.html', {'entradas': entradas})
 
 @login_required    
