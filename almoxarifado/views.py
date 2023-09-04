@@ -50,7 +50,7 @@ def relatorio_consumo_view(request):
 
             saidas = (
                 Saida.objects.filter(criado_em__range=(data_inicial, data_final))
-                .values('produto', 'produto__nome')
+                .values('produto', 'produto__nome', 'produto__descricao')
                 .annotate(quantidade_total=Sum('quantidade'))
                 .order_by('produto__nome')
             )
@@ -59,9 +59,6 @@ def relatorio_consumo_view(request):
 
     context = {'form': form, 'saidas': saidas}
     return render(request, 'relatorio_consumo.html', context)
-
-
-
 
 @login_required
 def dashboard_view(request):
