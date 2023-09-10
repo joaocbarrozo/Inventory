@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import FiltroDataForm, FornecedorForm, ProdutoForm, PedidoForm, ProdutoPedidoForm, EntradasForm, SaidasForm
 from django.db.models import Q
 from datetime import datetime
-from django.db.models import Sum, F, Q
+from django.db.models import Sum, F, Q, Subquery, OuterRef, ExpressionWrapper, FloatField
 
 def login_view(request):
     if request.method == 'POST':
@@ -51,25 +51,45 @@ def relatorio_consumo_view(request):
             saidas = (
                 Saida.objects.filter(criado_em__range=(data_inicial, data_final))
                 .values('produto', 'produto__nome', 'produto__descricao')
-                .annotate(quantidade_total=Sum('quantidade'))
-                .order_by('produto__nome')
-            )
+                .annotate(quantidade_total=Sum('quantidade')))
+            saidas = saidas.order_by('produto__nome')
+            
     else:
         form = FiltroDataForm()
 
     context = {'form': form, 'saidas': saidas}
     return render(request, 'relatorio_consumo.html', context)
 
+
 @login_required
 def dashboard_view(request):
     # Cálculo do valor total em estoque
-    valor_total_estoque = Produto.objects.aggregate(Sum('quantidade'))['quantidade__sum']
+    valor_total_estoque= 0
+    sem_entrada_registrada = 0
+    #Seleciona todos os produtos ordenando por nome
+    produtos = Produto.objects.all().order_by('nome')
+    #Lista de produtos com pelo menos um item em estoque
+    produtosAtual = produtos.filter(quantidade__gt=0)
+    #Verifica o ultimo preço de cada item em estoque atual
+    for produto in produtosAtual:
+        ultima_entrada = Entrada.objects.filter(Q(produto=produto) & Q(tipo="COMPRA")
+).order_by('-criado_em').first()
+        if ultima_entrada and ultima_entrada.preco_unitario > 0:
+            valor_unitario = ultima_entrada.preco_unitario
+            print(f"Produto: {produto.nome}, Último Valor Unitário: {valor_unitario}")
+            valor_total_estoque = valor_total_estoque + (valor_unitario * produto.quantidade)
+        else:
+            sem_entrada_registrada = sem_entrada_registrada + 1
+            print(f"Produto: {produto.nome}, Sem entradas registradas")
+    produtos_total = produtosAtual.count()
 
     # Quantidade de produtos abaixo do estoque mínimo
     produtos_abaixo_minimo = Produto.objects.filter(quantidade__lt=F('estoque_minimo')).count()
 
     context = {
         'valor_total_estoque': valor_total_estoque,
+        'sem_entrada_registrada': sem_entrada_registrada,
+        'produtos_total': produtos_total,
         'produtos_abaixo_minimo': produtos_abaixo_minimo,
     }
 
