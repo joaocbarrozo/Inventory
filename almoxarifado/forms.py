@@ -7,7 +7,7 @@ class ProdutoForm(forms.ModelForm):
         fields = ['nome', 'descricao', 'categoria', 'local','quantidade', 'estoque_minimo']
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'autocapitalize': 'characters'}),
-            'descricao': forms.Textarea(attrs={'class': 'form-control', 'autocapitalize': 'characters'}),
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'autocapitalize': 'characters'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
             'local': forms.Select(attrs={'class': 'form-control'}),
             'quantidade': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -18,14 +18,14 @@ class ProdutoForm(forms.ModelForm):
 class EntradasForm(forms.ModelForm):
     class Meta:
         model = Entrada
-        fields = ['produto', 'tipo', 'fornecedor', 'quantidade', 'preco_unitario', 'usuario']
+        fields = ['produto', 'tipo', 'fornecedor', 'quantidade', 'preco_unitario']
         widgets = {
             'produto': forms.Select(attrs={'class': 'form-control'}),
             'tipo': forms.Select(attrs={'class': 'form-control'}),
             'fornecedor': forms.Select(attrs={'class': 'form-control'}),
             'quantidade': forms.NumberInput(attrs={'class': 'form-control'}),
             'preco_unitario': forms.NumberInput(attrs={'class': 'form-control'}),
-            'usuario': forms.Select(attrs={'class': 'form-control'}),
+            #'usuario': forms.Select(attrs={'class': 'form-control'}),
         }
         
 class SaidasForm(forms.ModelForm):

@@ -134,7 +134,7 @@ def add_product(request):
 
 @login_required
 def entradas_view(request):
-    entradas = Entrada.objects.all().order_by("-criado_em")
+    entradas = Entrada.objects.all().order_by("produto__nome")
 
     # Filtra entradas
     produto = request.GET.get('produto')
@@ -180,7 +180,7 @@ def add_entrada_view(request):
 
 @login_required    
 def saidas_view(request):
-    saidas = Saida.objects.all().order_by("-criado_em")
+    saidas = Saida.objects.all().order_by("produto__nome")
     # Filtra saidas 
     produto = request.GET.get('produto')
     setor = request.GET.get('setor')
