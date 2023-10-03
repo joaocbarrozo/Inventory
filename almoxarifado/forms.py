@@ -31,12 +31,12 @@ class EntradasForm(forms.ModelForm):
 class SaidasForm(forms.ModelForm):
     class Meta:
         model = Saida
-        fields = ['produto', 'setor', 'quantidade', 'usuario']
+        fields = ['produto', 'setor', 'quantidade']
         widgets = {
             'produto': forms.Select(attrs={'class': 'form-control'}),
             'setor': forms.Select(attrs={'class': 'form-control'}),
             'quantidade': forms.NumberInput(attrs={'class': 'form-control'}),
-            'usuario': forms.Select(attrs={'class': 'form-control'}),
+            #'usuario': forms.Select(attrs={'class': 'form-control'}),
         }
         
         def clean_quantidade(self):
