@@ -127,7 +127,7 @@
             <td>{{ pedido.id }}</td>
             <td>{{ pedido.fornecedor }}</td>
             <td>{{ pedido.status }}</td>
-            <td>{{ pedido.criado_em }}</td>
+            <td>{{ pedido.criado_em|date:"d/m/Y" }}</td>
             <td>
               <a href="{% url 'detalhes_pedido' pedido_id=pedido.id %}" class="btn btn-primary btn-sm">Detalhes</a>
               <a href="{% url 'editar_pedido' pedido_id=pedido.id %}" class="btn btn-primary btn-sm">Editar</a>
